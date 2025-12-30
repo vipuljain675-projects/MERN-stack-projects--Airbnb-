@@ -43,10 +43,10 @@ exports.postSignup = (req, res, next) => {
             lastName: result.lastName
           };
 
-          // Instead of req.session.isLoggedIn = true, we generate a JWT
+          // 🟢 RECTIFIED: Use process.env.JWT_SECRET instead of a hardcoded string
           const token = jwt.sign(
             { email: userData.email, userId: userData._id },
-            'SECRET_KEY_AIRBNB_2025', // Ensure this matches your is-auth middleware
+            process.env.JWT_SECRET, //
             { expiresIn: '1h' }
           );
           
@@ -91,10 +91,10 @@ exports.postLogin = (req, res, next) => {
         lastName: user.lastName
       };
 
-      // Generate JWT for the React frontend
+      // 🟢 RECTIFIED: Use process.env.JWT_SECRET for generating the login token
       const token = jwt.sign(
         { email: userData.email, userId: userData._id },
-        'SECRET_KEY_AIRBNB_2025',
+        process.env.JWT_SECRET, //
         { expiresIn: '1h' }
       );
       
@@ -113,6 +113,5 @@ exports.postLogin = (req, res, next) => {
 
 exports.postLogout = (req, res, next) => {
   // In a JWT-based decoupled system, the client handles logout by deleting the token.
-  // We simply return a confirmation message.
   res.status(200).json({ message: "Logged out successfully." });
 };

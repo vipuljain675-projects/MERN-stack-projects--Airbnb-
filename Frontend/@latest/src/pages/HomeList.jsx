@@ -11,11 +11,17 @@ const HomeList = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  // 🟢 RECTIFIED version of the helper function:
   const getImageUrl = (url) => {
     if (!url)
       return "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=800";
     if (url.startsWith("http")) return url;
-    return `http://localhost:3500${url}`;
+
+    // Use the API's base URL (without the /api suffix) to find the /uploads folder
+    const baseUrl = import.meta.env.VITE_API_URL
+      ? import.meta.env.VITE_API_URL.replace("/api", "")
+      : "http://localhost:3500";
+    return `${baseUrl}${url}`;
   };
 
   useEffect(() => {

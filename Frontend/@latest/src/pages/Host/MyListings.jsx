@@ -7,12 +7,18 @@ const MyListings = () => {
   const [loading, setLoading] = useState(true);
 
   // Helper to ensure images load from the backend port (3500)
+  // 🟢 RECTIFIED version of the helper function:
   const getImageUrl = (url) => {
     if (!url)
-      return "https://images.unsplash.com/photo-1518780664697-55e3ad937233?q=80&w=1965&auto=format&fit=crop";
-    return url.startsWith("http") ? url : `http://localhost:3500${url}`;
-  };
+      return "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=800";
+    if (url.startsWith("http")) return url;
 
+    // Use the API's base URL (without the /api suffix) to find the /uploads folder
+    const baseUrl = import.meta.env.VITE_API_URL
+      ? import.meta.env.VITE_API_URL.replace("/api", "")
+      : "http://localhost:3500";
+    return `${baseUrl}${url}`;
+  };
   useEffect(() => {
     // 🟢 RECTIFIED: Calling the exact endpoint defined in your hostRouter.js
     api

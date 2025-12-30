@@ -1,9 +1,10 @@
+require('dotenv').config();
 const mongoose = require("mongoose");
 const Home = require("./models/home");
 const User = require("./models/user");
 
 // 🔴 ENSURE THIS MATCHES YOUR MONGO URL
-const MONGODB_URI = 'mongodb://127.0.0.1:27017/airbnb_react';
+const MONGODB_URI = process.env.MONGODB_URI;
 
 // 1. DATA SOURCES
 const locations = [

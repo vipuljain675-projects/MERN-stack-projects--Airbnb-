@@ -12,8 +12,8 @@ module.exports = async (req, res, next) => {
     const token = authHeader.split(" ")[1];
 
     // 🟢 RECTIFIED: Use the hardcoded string that matches authController.js exactly
-    const decoded = jwt.verify(token, 'SECRET_KEY_AIRBNB_2025');
-
+// 🟢 RECTIFIED: Change this line in both files:
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findById(decoded.userId);
     if (!user) {
       return res.status(401).json({ message: "User not found" });
