@@ -1,5 +1,6 @@
 const Home = require("../models/home");
 const Booking = require("../models/booking");
+const sendEmail = require('../utils/email'); // Import your new utility
 
 /* =========================
    1. HOST ENTRY POINT
@@ -202,16 +203,28 @@ exports.getHostBookings = (req, res, next) => {
     });
 };
 
-exports.postHandleBooking = (req, res, next) => {
+
+exports.postHandleBooking = async (req, res, next) => {
   const { bookingId, action } = req.body; 
   
-  // Update status (Confirmed/Rejected)
-  Booking.findByIdAndUpdate(bookingId, { status: action })
-    .then((result) => {
-      res.status(200).json({ message: `Booking ${action} successfully.`, booking: result });
-    })
-    .catch(err => {
-      console.error(err);
-      res.status(500).json({ message: "Handling booking request failed." });
-    });
+  try {
+    // 🟢 Populate userId to get the Booker's real Gmail address
+    const booking = await Booking.findByIdAndUpdate(bookingId, { status: action })
+      .populate('userId') 
+      .populate('homeId');
+
+    if (action === 'Confirmed' && booking.userId.email) {
+      await sendEmail({
+        email: booking.userId.email,
+        subject: 'Reservation Confirmed! 🏠',
+        html: `<h3>Hi ${booking.userId.firstName}!</h3>
+               <p>Your stay at <b>${booking.homeId.houseName}</b> is confirmed.</p>
+               <p>Check-in: ${new Date(booking.checkIn).toDateString()}</p>`
+      });
+    }
+
+    res.status(200).json({ message: `Booking ${action} successfully.` });
+  } catch (err) {
+    res.status(500).json({ message: "Action failed" });
+  }
 };

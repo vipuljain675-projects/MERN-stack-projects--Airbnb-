@@ -3,6 +3,7 @@ const Booking = require("../models/booking");
 const Favourite = require("../models/favourite");
 const Review = require("../models/review");
 
+
 /* =========================
    1. HOME LIST & DETAILS
 ========================= */
