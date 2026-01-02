@@ -253,3 +253,74 @@ footer .bi:hover {
 .cursor-pointer {
   cursor: pointer;
 }
+
+/* 🟢 NEW: Skeleton Pulse Animation */
+@keyframes pulse {
+  0% { background-color: #f2f2f2; }
+  50% { background-color: #e0e0e0; }
+  100% { background-color: #f2f2f2; }
+}
+
+.skeleton-card {
+  width: 100%;
+  aspect-ratio: 20/19;
+  border-radius: 12px;
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+.skeleton-text {
+  height: 15px;
+  margin-top: 10px;
+  border-radius: 4px;
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+/* 🟢 NEW: Modern "Load More" Button */
+.load-more-btn {
+  background: #fff;
+  border: 1px solid #222;
+  color: #222;
+  padding: 13px 23px;
+  font-size: 16px;
+  font-weight: 600;
+  transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
+}
+
+.load-more-btn:hover {
+  background: #f7f7f7;
+  transform: scale(1.04);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+/* Image Hover Zoom */
+.group-card img {
+  transition: transform 0.4s ease;
+}
+
+.group-card:hover img {
+  transform: scale(1.05);
+}
+
+.load-more-btn {
+  background: #fff;
+  border: 1px solid #222;
+  color: #222;
+  transition: all 0.2s ease;
+}
+
+.load-more-btn:hover {
+  background: #f7f7f7;
+  transform: scale(1.05);
+}
+
+/* 🟢 Skeleton Animation Fix */
+@keyframes pulse {
+  0% { opacity: 1; background-color: #f2f2f2; }
+  50% { opacity: 0.5; background-color: #e5e5e5; } /* Makes it look like it's breathing */
+  100% { opacity: 1; background-color: #f2f2f2; }
+}
+
+.skeleton-card, .skeleton-text {
+  animation: pulse 1.5s infinite ease-in-out;
+  display: block; /* Ensure visibility */
+}

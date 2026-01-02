@@ -9,13 +9,21 @@ const Review = require("../models/review");
 
 exports.getHomeList = async (req, res) => {
   try {
-    // 🟢 RECTIFIED: Added sort to show newest homes first
-    const homes = await Home.find().sort({ _id: -1 });
+    // 🟢 RECTIFIED: Strict 10-item pagination math
+    const page = parseInt(req.query.page) || 1;
+    const limit = 10; 
+    const skip = (page - 1) * limit;
+
+    const totalHomes = await Home.countDocuments();
+    const homes = await Home.find()
+      .sort({ _id: -1 }) // Newest homes first
+      .skip(skip)
+      .limit(limit);
+
+    // 🟢 RECTIFIED: Explicit JSON structure to tell Frontend if more homes exist
     return res.status(200).json({
-      pageTitle: "Explore Homes",
-      currentPage: "home-list",
-      homes,
-      isSearch: false
+      homes: homes,
+      hasNextPage: (skip + homes.length) < totalHomes
     });
   } catch (err) {
     console.error(err);
@@ -132,6 +140,13 @@ exports.postBooking = async (req, res) => {
 
     const newCheckIn = new Date(checkIn);
     const newCheckOut = new Date(checkOut);
+
+    // 🔴 Demand 1: Logical Date Validation
+    if (newCheckIn >= newCheckOut) {
+      return res.status(400).json({ 
+        message: "Check-out date must be after the check-in date." 
+      });
+    }
 
     const conflict = await Booking.findOne({
       homeId,

@@ -124,10 +124,20 @@ const HomeDetail = () => {
       navigate("/book-login");
       return;
     }
+
     if (!checkIn || !checkOut) {
-      alert("Please select dates.");
+      alert("Select your dates first!"); // Better UX
       return;
     }
+
+    // 🔴 Requirement 1: Logical Date Validation
+    if (new Date(checkIn) >= new Date(checkOut)) {
+      // Realistic touch: Inline error or focused alert
+      alert("Checkout date must be at least one day after check-in.");
+      return;
+    }
+
+    // ... rest of API logic
 
     try {
       const token = localStorage.getItem("token");
